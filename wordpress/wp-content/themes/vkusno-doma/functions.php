@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VKUSNO_DOMA_SEED_VERSION = '1.0.8';
+const VKUSNO_DOMA_SEED_VERSION = '1.0.9';
 
 function vkusno_doma_setup(): void
 {
@@ -384,6 +384,17 @@ function vkusno_doma_get_seed_data(): array
                 'category' => 'main-dishes',
                 'rating' => '5.0 (1)',
                 'time' => '2–3 тижні',
+                'author' => 'Автор сайту',
+            ],
+            [
+                'title' => 'Соус маринара і паста з ним',
+                'slug' => 'sous-marinara-i-pasta',
+                'excerpt' => 'Простий і яскравий томатний соус, який однаково добре працює і для спагеті, і як база для піци.',
+                'content' => '<p>Маринара тримається на кількох простих речах: хороші консервовані томати, оливкова олія, часник і сухі трави. Секрет не в складності, а в правильному прогріві ароматики, спокійному випаровуванні зайвої вологи та фінальному балансі між сіллю, солодкістю і кислотністю.</p><h2>Інгредієнти</h2><ul><li>400–500 г консервованих очищених томатів у власному соку</li><li>2–3 зубчики часнику</li><li>2–3 ст. л. оливкової олії</li><li>1 ч. л. сухого орегано</li><li>1 ч. л. сухого базиліку</li><li>сіль за смаком</li><li>цукор за потреби</li><li>1 ч. л. яблучного оцту або кілька крапель за смаком</li><li>спагеті для подачі</li><li>тертий пармезан для подачі</li></ul><h2>Приготування</h2><ol><li><strong>Ароматизуйте олію.</strong> Розігрійте оливкову олію в сотейнику. Додайте нарізаний часник, а через кілька секунд всипте орегано та базилік. Прогрівайте 10–15 секунд, не даючи часнику підгоріти.</li><li><strong>Додайте томати.</strong> Викладіть у сотейник консервовані помідори разом із соком. Якщо томати цілі, злегка розімніть їх лопаткою.</li><li><strong>Тушкуйте соус.</strong> Зменште вогонь і готуйте 20–25 хвилин, поки соус не стане густішим і насиченішим. За цей час зайва волога піде, а смак стане глибшим.</li><li><strong>Збалансуйте смак.</strong> Спробуйте маринару і відкоригуйте її сіллю, невеликою кількістю цукру та за потреби ложкою яблучного оцту. У фіналі соус має бути яскравим, томатним, з виразним кисло-солодким балансом.</li><li><strong>Подайте з пастою.</strong> Відваріть спагеті в добре підсоленій воді до стану al dente, змішайте з гарячою маринарою і щедро посипте пармезаном.</li></ol><h2>Ще один варіант</h2><p>Цю ж маринару можна використовувати як основу для домашньої піци, сендвічів або запечених овочів.</p>',
+                'image' => 'recipe-marinara.png',
+                'category' => 'sauces',
+                'rating' => '5.0 (1)',
+                'time' => '35 хв.',
                 'author' => 'Автор сайту',
             ],
         ],
@@ -1010,6 +1021,89 @@ function vkusno_doma_migrate_basturma_recipe(): void
     update_option('vkusno_doma_basturma_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
 }
 add_action('init', 'vkusno_doma_migrate_basturma_recipe', 36);
+
+function vkusno_doma_migrate_marinara_recipe(): void
+{
+    if (get_option('vkusno_doma_marinara_recipe_migrated') === VKUSNO_DOMA_SEED_VERSION) {
+        return;
+    }
+
+    $seed_data = vkusno_doma_get_seed_data();
+    $recipe = null;
+
+    foreach ($seed_data['recipes'] as $recipe_data) {
+        if ($recipe_data['slug'] === 'sous-marinara-i-pasta') {
+            $recipe = $recipe_data;
+            break;
+        }
+    }
+
+    if (!$recipe) {
+        return;
+    }
+
+    $existing_recipe = get_page_by_path($recipe['slug'], OBJECT, 'recipe');
+
+    if (!$existing_recipe instanceof WP_Post) {
+        $same_title_posts = get_posts([
+            'post_type' => 'recipe',
+            'post_status' => 'any',
+            'title' => $recipe['title'],
+            'numberposts' => 1,
+        ]);
+
+        if (!empty($same_title_posts) && $same_title_posts[0] instanceof WP_Post) {
+            $existing_recipe = $same_title_posts[0];
+        }
+    }
+
+    $post_args = [
+        'post_title' => $recipe['title'],
+        'post_name' => $recipe['slug'],
+        'post_type' => 'recipe',
+        'post_status' => 'publish',
+        'comment_status' => 'open',
+        'ping_status' => 'closed',
+        'post_excerpt' => $recipe['excerpt'],
+        'post_content' => $recipe['content'],
+    ];
+
+    if ($existing_recipe instanceof WP_Post) {
+        $post_args['ID'] = $existing_recipe->ID;
+        $post_id = (int) wp_update_post($post_args);
+    } else {
+        $post_id = (int) wp_insert_post($post_args);
+    }
+
+    if ($post_id) {
+        wp_set_object_terms($post_id, ['sauces'], 'recipe_category');
+        update_post_meta($post_id, '_vkusno_doma_rating', $recipe['rating']);
+        update_post_meta($post_id, '_vkusno_doma_time', $recipe['time']);
+        update_post_meta($post_id, '_vkusno_doma_author', $recipe['author']);
+
+        $attachment_id = vkusno_doma_import_local_image($recipe['image'], $post_id);
+
+        if ($attachment_id) {
+            set_post_thumbnail($post_id, $attachment_id);
+        }
+
+        $duplicates = get_posts([
+            'post_type' => 'recipe',
+            'post_status' => 'any',
+            'title' => $recipe['title'],
+            'numberposts' => -1,
+        ]);
+
+        foreach ($duplicates as $duplicate_post) {
+            if ((int) $duplicate_post->ID !== $post_id) {
+                wp_delete_post((int) $duplicate_post->ID, true);
+            }
+        }
+    }
+
+    update_option('vkusno_doma_marinara_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
+}
+add_action('init', 'vkusno_doma_migrate_marinara_recipe', 37);
 
 function vkusno_doma_seed_menus(): void
 {
