@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VKUSNO_DOMA_SEED_VERSION = '1.0.7';
+const VKUSNO_DOMA_SEED_VERSION = '1.0.8';
 
 function vkusno_doma_setup(): void
 {
@@ -373,6 +373,17 @@ function vkusno_doma_get_seed_data(): array
                 'category' => 'main-dishes',
                 'rating' => '5.0 (1)',
                 'time' => '5 год. + охолодження',
+                'author' => 'Автор сайту',
+            ],
+            [
+                'title' => 'Делікатесна бастурма',
+                'slug' => 'delikatesna-basturma',
+                'excerpt' => 'Ніжна в’ялена яловичина в ароматному чамані, яку нарізають найтоншими слайсами.',
+                'content' => '<p>Ця бастурма готується не швидко, зате дає той самий щільний, пряний і делікатний результат, заради якого варто почекати. Основа проста: хороша вирізка, спокійне просолювання, віджим вологи, підв’ялення і правильний чаман без надто товстої обмазки.</p><h2>Інгредієнти</h2><ul><li>1 кг телячої або яловичої вирізки</li><li>60–70 г крупної солі для засолювання</li></ul><h2>Для чаману</h2><ul><li>5 ст. л. меленого пажитнику або чаману</li><li>3 ст. л. солодкої паприки</li><li>2 ст. л. сухого часнику</li><li>кайенський перець або чилі за смаком</li><li>1 ст. л. солі</li><li>окріп, щоб довести суміш до густої пасти</li></ul><h2>Приготування</h2><ol><li><strong>Підготуйте м’ясо.</strong> Повністю зачистіть вирізку від плівок і жил. Якщо шматок нерівний, його можна акуратно скласти або перев’язати, щоб форма вийшла щільнішою й красивішою.</li><li><strong>Просоліть.</strong> Рясно обсипте м’ясо крупною сіллю, покладіть у лоток, накрийте і залиште в холодильнику на 3 доби. Щодня зливайте сік, перевертайте шматок, легко масажуйте і при потребі додавайте трохи свіжої солі.</li><li><strong>Вимочіть і відтисніть.</strong> Добре промийте м’ясо від солі та покладіть у прохолодну воду на 3 години. Потім викладіть на решітку між паперовими рушниками, накрийте дошкою і поставте гніт мінімум на 1 годину, кілька разів змінюючи вологі рушники.</li><li><strong>Підв’яльте.</strong> Протягніть шпагат або щільно обв’яжіть шматок і підвісьте в сухому провітрюваному місці. У звичайних умовах на це йде близько 3 днів, а в дегідраторі з вентилятором достатньо 12–14 годин.</li><li><strong>Зробіть чаман.</strong> Змішайте пажитник, паприку, сухий часник, чилі та сіль. Залийте окропом і розмішайте до густої пасти. Дайте їй трохи охолонути і розкритися.</li><li><strong>Обмажте бастурму.</strong> Покрийте шматок рівним тонким шаром чаману. За потреби додайте другий тонкий шар, але не робіть кірку занадто товстою.</li><li><strong>Дов’яліть до готовності.</strong> Знову підвісьте бастурму в сухому провітрюваному місці на 1–2 тижні. Готовність перевіряйте натисканням: м’ясо має стати щільним і пружним, як хороша сиров’ялена ковбаса.</li></ol><h2>Подача</h2><p>Готову бастурму нарізайте максимально тонко. Вона добре працює як самостійна закуска, на м’ясній дошці або поруч із сиром, вином і підсушеним хлібом.</p>',
+                'image' => 'recipe-basturma.png',
+                'category' => 'main-dishes',
+                'rating' => '5.0 (1)',
+                'time' => '2–3 тижні',
                 'author' => 'Автор сайту',
             ],
         ],
@@ -917,6 +928,88 @@ function vkusno_doma_migrate_sardelky_recipe(): void
     update_option('vkusno_doma_sardelky_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
 }
 add_action('init', 'vkusno_doma_migrate_sardelky_recipe', 35);
+
+function vkusno_doma_migrate_basturma_recipe(): void
+{
+    if (get_option('vkusno_doma_basturma_recipe_migrated') === VKUSNO_DOMA_SEED_VERSION) {
+        return;
+    }
+
+    $seed_data = vkusno_doma_get_seed_data();
+    $recipe = null;
+
+    foreach ($seed_data['recipes'] as $recipe_data) {
+        if ($recipe_data['slug'] === 'delikatesna-basturma') {
+            $recipe = $recipe_data;
+            break;
+        }
+    }
+
+    if (!$recipe) {
+        return;
+    }
+
+    $existing_recipe = get_page_by_path($recipe['slug'], OBJECT, 'recipe');
+
+    if (!$existing_recipe instanceof WP_Post) {
+        $same_title_posts = get_posts([
+            'post_type' => 'recipe',
+            'post_status' => 'any',
+            'title' => $recipe['title'],
+            'numberposts' => 1,
+        ]);
+
+        if (!empty($same_title_posts) && $same_title_posts[0] instanceof WP_Post) {
+            $existing_recipe = $same_title_posts[0];
+        }
+    }
+    $post_args = [
+        'post_title' => $recipe['title'],
+        'post_name' => $recipe['slug'],
+        'post_type' => 'recipe',
+        'post_status' => 'publish',
+        'comment_status' => 'open',
+        'ping_status' => 'closed',
+        'post_excerpt' => $recipe['excerpt'],
+        'post_content' => $recipe['content'],
+    ];
+
+    if ($existing_recipe instanceof WP_Post) {
+        $post_args['ID'] = $existing_recipe->ID;
+        $post_id = (int) wp_update_post($post_args);
+    } else {
+        $post_id = (int) wp_insert_post($post_args);
+    }
+
+    if ($post_id) {
+        wp_set_object_terms($post_id, ['main-dishes'], 'recipe_category');
+        update_post_meta($post_id, '_vkusno_doma_rating', $recipe['rating']);
+        update_post_meta($post_id, '_vkusno_doma_time', $recipe['time']);
+        update_post_meta($post_id, '_vkusno_doma_author', $recipe['author']);
+
+        $attachment_id = vkusno_doma_import_local_image($recipe['image'], $post_id);
+
+        if ($attachment_id) {
+            set_post_thumbnail($post_id, $attachment_id);
+        }
+
+        $duplicates = get_posts([
+            'post_type' => 'recipe',
+            'post_status' => 'any',
+            'title' => $recipe['title'],
+            'numberposts' => -1,
+        ]);
+
+        foreach ($duplicates as $duplicate_post) {
+            if ((int) $duplicate_post->ID !== $post_id) {
+                wp_delete_post((int) $duplicate_post->ID, true);
+            }
+        }
+    }
+
+    update_option('vkusno_doma_basturma_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
+}
+add_action('init', 'vkusno_doma_migrate_basturma_recipe', 36);
 
 function vkusno_doma_seed_menus(): void
 {
