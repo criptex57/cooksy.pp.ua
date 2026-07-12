@@ -41,4 +41,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateState();
   });
+
+  const revealTargets = document.querySelectorAll(
+    '.hero-card, .section-head, .category-card, .recipe-card, .collection-card, .feature, .page-hero, .page-hero--split, .content-list__item, .single-layout, .single-post, .comments-block, .footer-grid'
+  );
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -8% 0px',
+      }
+    );
+
+    revealTargets.forEach((target, index) => {
+      target.classList.add('reveal');
+      target.style.transitionDelay = `${Math.min(index % 6, 5) * 60}ms`;
+      revealObserver.observe(target);
+    });
+  } else {
+    revealTargets.forEach((target) => {
+      target.classList.add('is-visible');
+    });
+  }
 });
