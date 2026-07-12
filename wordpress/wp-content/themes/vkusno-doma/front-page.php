@@ -30,9 +30,9 @@ get_header();
     <div class="hero-card">
       <div class="hero__content">
         <p class="eyebrow"><?php esc_html_e('Домашня кухня без зайвого', 'vkusno-doma'); ?></p>
-        <h1><?php esc_html_e('Готуйте з любов’ю, діліться натхненням', 'vkusno-doma'); ?></h1>
+        <h1><?php esc_html_e('Готуйте з любов’ю, зберігайте улюблене', 'vkusno-doma'); ?></h1>
         <p class="hero__description">
-          <?php esc_html_e('Зберігайте улюблені рецепти, відкривайте нові смаки й повертайтеся до домашньої кухні, яка справді надихає.', 'vkusno-doma'); ?>
+          <?php esc_html_e('Спокійний кулінарний простір для рецептів, до яких хочеться повертатися знову.', 'vkusno-doma'); ?>
         </p>
         <div class="hero-actions">
           <a class="button button--primary" href="<?php echo esc_url(get_post_type_archive_link('recipe')); ?>"><?php esc_html_e('Дивитися рецепти', 'vkusno-doma'); ?></a>
@@ -41,6 +41,7 @@ get_header();
 
       <div class="hero__visual">
         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/hero-pasta.png'); ?>" alt="" />
+        <div class="hero-note"><?php esc_html_e('Тепла домашня подача', 'vkusno-doma'); ?></div>
       </div>
     </div>
   </div>
