@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VKUSNO_DOMA_SEED_VERSION = '1.0.5';
+const VKUSNO_DOMA_SEED_VERSION = '1.0.6';
 
 function vkusno_doma_setup(): void
 {
@@ -217,6 +217,12 @@ function vkusno_doma_get_seed_data(): array
                 'image' => 'category-salad.png',
             ],
             [
+                'name' => 'Сири',
+                'slug' => 'snacks',
+                'description' => 'Витримані, тягучі та домашні сири для тих, хто любить працювати з молоком і часом.',
+                'image' => 'category-cheese.png',
+            ],
+            [
                 'name' => 'Горячие блюда',
                 'slug' => 'main-dishes',
                 'description' => 'Главные блюда для семейного ужина и праздников.',
@@ -346,6 +352,17 @@ function vkusno_doma_get_seed_data(): array
                 'rating' => '4.8 (29)',
                 'time' => '15 мин.',
                 'author' => 'Алексей Смирнов',
+            ],
+            [
+                'title' => 'Домашній пармезан',
+                'slug' => 'domashnii-parmezan',
+                'excerpt' => 'Витриманий твердий сир із щільним зерном, насиченим ароматом і довгим дозріванням.',
+                'content' => '<p>Домашній пармезан потребує терпіння, але віддячує глибоким смаком, крихкою текстурою та виразними сирними кристалами. Головне тут не перевантажувати рецепт дрібницями, а чітко тримати температуру, пресування і час визрівання.</p><h2>Інгредієнти</h2><ul><li>20 л молока: приблизно 13,5 л вчорашнього знятого молока та 6,5 л свіжого ранкового</li><li>2 дози термофільної закваски для пармезану</li><li>сичужний фермент</li><li>0,5 склянки кип’яченої охолодженої води</li><li>для розсолу: 2 л води та 500 г солі</li></ul><h2>Короткий інвентар</h2><ul><li>велика каструля або водяна баня</li><li>термометр</li><li>вінчик або ніж для різання згустку</li><li>марля, друшляк, форма для сиру</li><li>вантажі для пресування 5 і 10 кг</li></ul><h2>Приготування</h2><ol><li><strong>Підготуйте молоко.</strong> Змішайте вчорашнє зняте молоко зі свіжим, нагрійте до 33°C, внесіть закваску і витримайте 1 годину при 32–33°C.</li><li><strong>Внесіть фермент.</strong> Розчиніть його у воді, добре перемішайте з молоком і дочекайтеся щільного згустку. Наріжте згусток і активно вимішуйте, поки зерно не стане дрібним, приблизно 2–3 мм.</li><li><strong>Проведіть другий нагрів.</strong> Поступово підніміть температуру з 33°C до 58°C приблизно за 20 хвилин, постійно помішуючи. Потім опустіть до 55°C і вимішуйте ще 5–10 хвилин, поки зерно не буде добре злипатися в руці.</li><li><strong>Формуйте та пресуйте.</strong> Зберіть зерно в марлю, поверніть у сироватку на 60 хвилин при 55–57°C, перевертаючи кожні 15 хвилин. Далі пресуйте у формі: 20 хвилин під 5 кг, ще 20 хвилин після перевороту, потім по 40 хвилин з кожного боку під 10 кг і залиште під пресом на ніч.</li><li><strong>Посоліть і визрівайте.</strong> Після 30–48 годин ферментації занурте головку в 20% розсіл. Орієнтир для соління: 6 годин на кожні 500 г сиру. Далі обсушіть 1–2 дні та визрівайте при 10–11°C і вологості близько 85% від 6 до 12 місяців.</li></ol><h2>Порада</h2><p>Якщо під час дозрівання з’являється пліснява, її можна акуратно зняти тканиною, змоченою в міцному розсолі. Коли скоринка добре підсохне, тонкий шар оливкової олії допоможе захистити сир від пересихання.</p>',
+                'image' => 'recipe-parmesan.png',
+                'category' => 'snacks',
+                'rating' => '5.0 (1)',
+                'time' => '6–12 міс.',
+                'author' => 'Автор сайту',
             ],
         ],
         'collections' => [
@@ -748,6 +765,91 @@ function vkusno_doma_migrate_collection_taxonomy(): void
     update_option('vkusno_doma_collection_taxonomy_migrated', VKUSNO_DOMA_SEED_VERSION);
 }
 add_action('init', 'vkusno_doma_migrate_collection_taxonomy', 33);
+
+function vkusno_doma_migrate_parmesan_recipe(): void
+{
+    if (get_option('vkusno_doma_parmesan_recipe_migrated') === VKUSNO_DOMA_SEED_VERSION) {
+        return;
+    }
+
+    $seed_data = vkusno_doma_get_seed_data();
+    $cheese_category = null;
+    $parmesan_recipe = null;
+
+    foreach ($seed_data['categories'] as $category_data) {
+        if ($category_data['slug'] === 'snacks') {
+            $cheese_category = $category_data;
+            break;
+        }
+    }
+
+    foreach ($seed_data['recipes'] as $recipe_data) {
+        if ($recipe_data['slug'] === 'domashnii-parmezan') {
+            $parmesan_recipe = $recipe_data;
+            break;
+        }
+    }
+
+    if (!$cheese_category || !$parmesan_recipe) {
+        return;
+    }
+
+    $term = get_term_by('slug', 'snacks', 'recipe_category');
+
+    if (!$term) {
+        $term = wp_insert_term($cheese_category['name'], 'recipe_category', [
+            'slug' => $cheese_category['slug'],
+            'description' => $cheese_category['description'],
+        ]);
+    } else {
+        wp_update_term($term->term_id, 'recipe_category', [
+            'name' => $cheese_category['name'],
+            'description' => $cheese_category['description'],
+        ]);
+    }
+
+    $term_id = is_array($term) ? (int) $term['term_id'] : (int) $term->term_id;
+    $term_image_id = vkusno_doma_import_local_image($cheese_category['image']);
+
+    if ($term_image_id) {
+        update_term_meta($term_id, '_vkusno_doma_image_id', $term_image_id);
+    }
+
+    $existing_recipe = get_page_by_path($parmesan_recipe['slug'], OBJECT, 'recipe');
+    $post_args = [
+        'post_title' => $parmesan_recipe['title'],
+        'post_name' => $parmesan_recipe['slug'],
+        'post_type' => 'recipe',
+        'post_status' => 'publish',
+        'comment_status' => 'open',
+        'ping_status' => 'closed',
+        'post_excerpt' => $parmesan_recipe['excerpt'],
+        'post_content' => $parmesan_recipe['content'],
+    ];
+
+    if ($existing_recipe instanceof WP_Post) {
+        $post_args['ID'] = $existing_recipe->ID;
+        $post_id = (int) wp_update_post($post_args);
+    } else {
+        $post_id = (int) wp_insert_post($post_args);
+    }
+
+    if ($post_id) {
+        wp_set_object_terms($post_id, ['snacks'], 'recipe_category');
+        update_post_meta($post_id, '_vkusno_doma_rating', $parmesan_recipe['rating']);
+        update_post_meta($post_id, '_vkusno_doma_time', $parmesan_recipe['time']);
+        update_post_meta($post_id, '_vkusno_doma_author', $parmesan_recipe['author']);
+
+        $attachment_id = vkusno_doma_import_local_image($parmesan_recipe['image'], $post_id);
+
+        if ($attachment_id) {
+            set_post_thumbnail($post_id, $attachment_id);
+        }
+    }
+
+    update_option('vkusno_doma_parmesan_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
+}
+add_action('init', 'vkusno_doma_migrate_parmesan_recipe', 34);
 
 function vkusno_doma_seed_menus(): void
 {
