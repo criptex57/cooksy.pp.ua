@@ -357,7 +357,7 @@ h3 {
   position: relative;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
   align-items: center;
   gap: clamp(28px, 3.6vw, 54px);
   min-height: 520px;
@@ -396,7 +396,7 @@ h3 {
   position: relative;
   z-index: 1;
   color: #fff;
-  max-width: 500px;
+  max-width: 620px;
   min-width: 0;
 }
 
@@ -414,15 +414,16 @@ h3 {
 
 h1 {
   margin: 0;
-  font-size: clamp(2.8rem, 4.6vw, 4.6rem);
-  line-height: 0.94;
+  font-size: clamp(2.55rem, 4vw, 4.15rem);
+  line-height: 1.02;
   font-weight: 700;
-  max-width: 8.5ch;
-  text-wrap: balance;
+  max-width: 10.8ch;
+  letter-spacing: -0.03em;
+  text-wrap: pretty;
 }
 
 .hero__description {
-  max-width: 29rem;
+  max-width: 32rem;
   margin: 22px 0 0;
   color: rgba(255, 247, 240, 0.72);
   font-size: 1rem;
@@ -1594,9 +1595,9 @@ h1 {
   }
 
   h1 {
-    max-width: 10ch;
-    font-size: clamp(2.3rem, 10vw, 3.4rem);
-    line-height: 0.95;
+    max-width: 12ch;
+    font-size: clamp(2.15rem, 9vw, 3.2rem);
+    line-height: 1;
   }
 
   .hero__description {
