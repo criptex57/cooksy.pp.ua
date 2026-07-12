@@ -35,6 +35,14 @@ function vkusno_doma_assets(): void
         filemtime(get_stylesheet_directory() . '/assets/css/theme.css')
     );
 
+    wp_enqueue_script(
+        'vkusno-doma-theme',
+        get_template_directory_uri() . '/assets/js/theme.js',
+        [],
+        filemtime(get_stylesheet_directory() . '/assets/js/theme.js'),
+        true
+    );
+
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }

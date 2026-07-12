@@ -53,22 +53,30 @@ get_header();
       <a class="section-link" href="<?php echo esc_url(get_post_type_archive_link('recipe')); ?>"><?php esc_html_e('Усі рецепти', 'vkusno-doma'); ?></a>
     </div>
 
-    <div class="categories-grid">
-      <?php if (!is_wp_error($categories) && !empty($categories)) : ?>
-        <?php foreach ($categories as $category) : ?>
-          <article class="category-card">
-            <a href="<?php echo esc_url(get_term_link($category)); ?>">
-              <div class="category-card__art">
-                <?php $term_image_url = vkusno_doma_get_term_image_url($category->term_id); ?>
-                <?php if ($term_image_url) : ?>
-                  <img src="<?php echo esc_url($term_image_url); ?>" alt="<?php echo esc_attr($category->name); ?>" />
-                <?php endif; ?>
-              </div>
-              <h3><?php echo esc_html($category->name); ?></h3>
-            </a>
-          </article>
-        <?php endforeach; ?>
-      <?php endif; ?>
+    <div class="categories-carousel" data-carousel>
+      <button class="carousel-arrow carousel-arrow--prev" type="button" aria-label="<?php esc_attr_e('Попередні категорії', 'vkusno-doma'); ?>" data-carousel-prev>
+        <span aria-hidden="true">‹</span>
+      </button>
+      <div class="categories-track" data-carousel-track>
+        <?php if (!is_wp_error($categories) && !empty($categories)) : ?>
+          <?php foreach ($categories as $category) : ?>
+            <article class="category-card">
+              <a href="<?php echo esc_url(get_term_link($category)); ?>">
+                <div class="category-card__art">
+                  <?php $term_image_url = vkusno_doma_get_term_image_url($category->term_id); ?>
+                  <?php if ($term_image_url) : ?>
+                    <img src="<?php echo esc_url($term_image_url); ?>" alt="<?php echo esc_attr($category->name); ?>" />
+                  <?php endif; ?>
+                </div>
+                <h3><?php echo esc_html($category->name); ?></h3>
+              </a>
+            </article>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+      <button class="carousel-arrow carousel-arrow--next" type="button" aria-label="<?php esc_attr_e('Наступні категорії', 'vkusno-doma'); ?>" data-carousel-next>
+        <span aria-hidden="true">›</span>
+      </button>
     </div>
   </div>
 </section>
