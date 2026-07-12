@@ -1,0 +1,17 @@
+.DS_Store
+.env
+
+# Local build and deployment artifacts
+tmp/
+*.sql
+*.tgz
+*.tar.gz
+
+# Editor / OS noise
+*.swp
+*.swo
+
+# WordPress runtime content
+wordpress/wp-content/uploads/
+wordpress/wp-content/upgrade/
+wordpress/wp-content/cache/

@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вкусно дома</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="container header-row">
+          <a class="brand" href="#">
+            <span class="brand__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="img">
+                <path
+                  d="M7 3.5a2.5 2.5 0 0 0-2.5 2.5v2.5a3.5 3.5 0 0 0 2 3.15V19a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-7.35a3.5 3.5 0 0 0 2-3.15V6A2.5 2.5 0 0 0 17 3.5c-.98 0-1.83.56-2.25 1.38A2.5 2.5 0 0 0 12.5 3c-.94 0-1.77.52-2.2 1.28A2.49 2.49 0 0 0 7 3.5Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                />
+              </svg>
+            </span>
+            <span class="brand__text">Вкусно дома</span>
+          </a>
+
+          <nav class="main-nav" aria-label="Основная навигация">
+            <a href="#">Рецепты</a>
+            <a href="#">Категории</a>
+            <a href="#">Подборки</a>
+            <a href="#">Кулинары</a>
+            <a href="#">Блог</a>
+          </nav>
+
+          <div class="header-actions">
+            <button class="icon-button" aria-label="Поиск">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2" />
+                <path d="M16 16l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" />
+              </svg>
+            </button>
+            <a class="button button--primary" href="#">+ Добавить рецепт</a>
+            <a class="login-link" href="#">Войти</a>
+            <button class="burger" aria-label="Открыть меню">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="container">
+            <div class="hero-card">
+              <div class="hero__content">
+                <p class="eyebrow">Домашняя кухня без сложности</p>
+                <h1>Готовьте с любовью, делитесь вдохновением</h1>
+                <p class="hero__description">
+                  Находите лучшие рецепты со всего мира, готовьте и сохраняйте
+                  любимые блюда в удобной коллекции.
+                </p>
+
+                <form class="search-bar">
+                  <label class="sr-only" for="search">Поиск рецептов</label>
+                  <input
+                    id="search"
+                    type="text"
+                    placeholder="Поиск рецептов, ингредиентов, блюд..."
+                  />
+                  <button class="button button--primary" type="submit">Найти</button>
+                </form>
+
+                <div class="hero-tags">
+                  <span>Популярно сейчас:</span>
+                  <a href="#">Паста</a>
+                  <a href="#">Оладьи</a>
+                  <a href="#">Салаты</a>
+                  <a href="#">Курица</a>
+                  <a href="#">Выпечка</a>
+                </div>
+              </div>
+
+              <div class="hero__visual" aria-hidden="true">
+                <img src="assets/images/hero-pasta.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-head">
+              <h2>Категории</h2>
+              <a class="section-link" href="#">Все категории</a>
+            </div>
+
+            <div class="categories-grid">
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-breakfast.png" alt="" />
+                </div>
+                <h3>Завтраки</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-soup.png" alt="" />
+                </div>
+                <h3>Супы</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-salad.png" alt="" />
+                </div>
+                <h3>Салаты</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-hot-dishes.png" alt="" />
+                </div>
+                <h3>Горячие блюда</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-bakery.png" alt="" />
+                </div>
+                <h3>Выпечка</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-dessert.png" alt="" />
+                </div>
+                <h3>Десерты</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-drinks.png" alt="" />
+                </div>
+                <h3>Напитки</h3>
+              </article>
+              <article class="category-card">
+                <div class="category-card__art">
+                  <img src="assets/images/category-sauces.png" alt="" />
+                </div>
+                <h3>Соусы и заправки</h3>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-head">
+              <h2>Популярные рецепты</h2>
+              <a class="section-link" href="#">Смотреть все</a>
+            </div>
+
+            <div class="recipes-grid">
+              <article class="recipe-card">
+                <div class="recipe-card__image">
+                  <img src="assets/images/recipe-pasta-carbonara.png" alt="" />
+                  <button class="fav-button" aria-label="Добавить в избранное">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 20.5 4.8 13.8a4.8 4.8 0 0 1 6.8-6.8l.4.4.4-.4a4.8 4.8 0 0 1 6.8 6.8Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="recipe-card__body">
+                  <h3>Паста карбонара</h3>
+                  <div class="recipe-meta">
+                    <span>★ 4.8 (124)</span>
+                    <span>◷ 30 мин.</span>
+                  </div>
+                  <p class="recipe-author">Елена Иванова</p>
+                </div>
+              </article>
+
+              <article class="recipe-card">
+                <div class="recipe-card__image">
+                  <img src="assets/images/recipe-pumpkin-soup.png" alt="" />
+                  <button class="fav-button" aria-label="Добавить в избранное">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 20.5 4.8 13.8a4.8 4.8 0 0 1 6.8-6.8l.4.4.4-.4a4.8 4.8 0 0 1 6.8 6.8Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="recipe-card__body">
+                  <h3>Крем-суп из тыквы</h3>
+                  <div class="recipe-meta">
+                    <span>★ 4.9 (98)</span>
+                    <span>◷ 40 мин.</span>
+                  </div>
+                  <p class="recipe-author">Алексей Смирнов</p>
+                </div>
+              </article>
+
+              <article class="recipe-card">
+                <div class="recipe-card__image">
+                  <img src="assets/images/recipe-greek-salad.png" alt="" />
+                  <button class="fav-button fav-button--active" aria-label="Добавлено в избранное">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 20.5 4.8 13.8a4.8 4.8 0 0 1 6.8-6.8l.4.4.4-.4a4.8 4.8 0 0 1 6.8 6.8Z" fill="currentColor" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="recipe-card__body">
+                  <h3>Греческий салат</h3>
+                  <div class="recipe-meta">
+                    <span>★ 4.7 (76)</span>
+                    <span>◷ 15 мин.</span>
+                  </div>
+                  <p class="recipe-author">Мария Кузнецова</p>
+                </div>
+              </article>
+
+              <article class="recipe-card">
+                <div class="recipe-card__image">
+                  <img src="assets/images/recipe-rosemary-chicken.png" alt="" />
+                  <button class="fav-button" aria-label="Добавить в избранное">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 20.5 4.8 13.8a4.8 4.8 0 0 1 6.8-6.8l.4.4.4-.4a4.8 4.8 0 0 1 6.8 6.8Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="recipe-card__body">
+                  <h3>Курица с розмарином</h3>
+                  <div class="recipe-meta">
+                    <span>★ 4.9 (112)</span>
+                    <span>◷ 1 ч. 10 мин.</span>
+                  </div>
+                  <p class="recipe-author">Ирина Петрова</p>
+                </div>
+              </article>
+
+              <article class="recipe-card">
+                <div class="recipe-card__image">
+                  <img src="assets/images/recipe-cheesecake.png" alt="" />
+                  <button class="fav-button" aria-label="Добавить в избранное">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 20.5 4.8 13.8a4.8 4.8 0 0 1 6.8-6.8l.4.4.4-.4a4.8 4.8 0 0 1 6.8 6.8Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="recipe-card__body">
+                  <h3>Чизкейк Нью-Йорк</h3>
+                  <div class="recipe-meta">
+                    <span>★ 4.8 (89)</span>
+                    <span>◷ 1 ч.</span>
+                  </div>
+                  <p class="recipe-author">Дмитрий Волков</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <h2>Подборки рецептов</h2>
+            <div class="collections-grid">
+              <article class="collection-card">
+                <img src="assets/images/collection-picnic.png" alt="" />
+                <div class="collection-card__overlay">
+                  <h3>Рецепты для пикника</h3>
+                  <p>Идеи для вкусного отдыха на природе</p>
+                  <a class="button button--ghost" href="#">Смотреть подборку</a>
+                </div>
+              </article>
+              <article class="collection-card">
+                <img src="assets/images/collection-quick-dinner.png" alt="" />
+                <div class="collection-card__overlay">
+                  <h3>Быстрые ужины</h3>
+                  <p>Вкусные блюда за 30 минут</p>
+                  <a class="button button--ghost" href="#">Смотреть подборку</a>
+                </div>
+              </article>
+              <article class="collection-card">
+                <img src="assets/images/collection-baking.png" alt="" />
+                <div class="collection-card__overlay">
+                  <h3>Выпечка к чаю</h3>
+                  <p>Ароматная выпечка для уютных вечеров</p>
+                  <a class="button button--ghost" href="#">Смотреть подборку</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--features">
+          <div class="container">
+            <h2>Готовьте вместе с нами</h2>
+            <div class="features-grid">
+              <article class="feature">
+                <div class="feature__icon">🌿</div>
+                <div>
+                  <h3>Тысячи рецептов</h3>
+                  <p>На любой вкус и уровень сложности</p>
+                </div>
+              </article>
+              <article class="feature">
+                <div class="feature__icon">🧾</div>
+                <div>
+                  <h3>Пошаговые инструкции</h3>
+                  <p>С фото и видео для идеального результата</p>
+                </div>
+              </article>
+              <article class="feature">
+                <div class="feature__icon">👩‍🍳</div>
+                <div>
+                  <h3>Активное сообщество</h3>
+                  <p>Делитесь рецептами, комментируйте, задавайте вопросы</p>
+                </div>
+              </article>
+              <article class="feature">
+                <div class="feature__icon">♡</div>
+                <div>
+                  <h3>Сохраняйте любимое</h3>
+                  <p>Создавайте подборки и возвращайтесь к лучшим рецептам</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <section>
+            <h2>О сайте</h2>
+            <p>
+              «Вкусно дома» — это место, где любят готовить и делиться лучшими
+              рецептами. Присоединяйтесь к нашему сообществу кулинаров.
+            </p>
+            <div class="socials">
+              <a href="#" aria-label="VK">vk</a>
+              <a href="#" aria-label="Telegram">tg</a>
+              <a href="#" aria-label="YouTube">yt</a>
+              <a href="#" aria-label="Instagram">ig</a>
+            </div>
+          </section>
+
+          <section>
+            <h2>Популярные категории</h2>
+            <ul class="footer-links">
+              <li><a href="#">Завтраки</a></li>
+              <li><a href="#">Салаты</a></li>
+              <li><a href="#">Выпечка</a></li>
+              <li><a href="#">Десерты</a></li>
+              <li><a href="#">Быстрые рецепты</a></li>
+              <li><a href="#">Праздничные блюда</a></li>
+            </ul>
+          </section>
+
+          <section class="subscribe">
+            <h2>Подпишитесь на новинки</h2>
+            <p>Получайте лучшие рецепты прямо на почту</p>
+            <form class="subscribe-form">
+              <label class="sr-only" for="email">Email</label>
+              <input id="email" type="email" placeholder="Введите ваш e-mail" />
+              <button class="button button--primary" type="submit">Подписаться</button>
+            </form>
+          </section>
+        </div>
+
+        <div class="container footer-bottom">
+          <p>© 2025 Вкусно дома. Все права защищены.</p>
+          <div class="footer-bottom__links">
+            <a href="#">О нас</a>
+            <a href="#">Правила</a>
+            <a href="#">Конфиденциальность</a>
+            <a href="#">Контакты</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

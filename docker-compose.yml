@@ -1,0 +1,61 @@
+services:
+  db:
+    image: mariadb:11.4
+    container_name: cooking-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  wordpress:
+    image: wordpress:6.8.1-php8.3-apache
+    container_name: cooking-wordpress
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WORDPRESS_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_CONFIG_EXTRA: |
+        define('FS_METHOD', 'direct');
+        define('WP_MEMORY_LIMIT', '256M');
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./wordpress/wp-content/themes/vkusno-doma:/var/www/html/wp-content/themes/vkusno-doma
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    container_name: cooking-wpcli
+    depends_on:
+      db:
+        condition: service_healthy
+      wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./wordpress/wp-content/themes/vkusno-doma:/var/www/html/wp-content/themes/vkusno-doma
+    entrypoint: ["tail", "-f", "/dev/null"]
+
+volumes:
+  db_data:
+  wordpress_data:
