@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VKUSNO_DOMA_SEED_VERSION = '1.0.6';
+const VKUSNO_DOMA_SEED_VERSION = '1.0.7';
 
 function vkusno_doma_setup(): void
 {
@@ -362,6 +362,17 @@ function vkusno_doma_get_seed_data(): array
                 'category' => 'snacks',
                 'rating' => '5.0 (1)',
                 'time' => '6–12 міс.',
+                'author' => 'Автор сайту',
+            ],
+            [
+                'title' => 'Домашні сардельки',
+                'slug' => 'domashni-sardelky',
+                'excerpt' => 'Соковиті свинячі сардельки з гладкою емульсією, натуральною оболонкою та щільною м’ясною текстурою.',
+                'content' => '<p>Це домашня версія соковитих сарделек за мотивами підходу Дмитра Fresco. Ключ тут не лише у складі, а й у технології: добре охолоджене м’ясо, лід під час пробивання, швартенблок для зв’язування вологи та чотири етапи термообробки без перегріву.</p><h2>Інгредієнти на 1 кг м’ясної сировини</h2><ul><li>670 г свинячої грудинки</li><li>330 г пісної свинини: лопатка, окіст або чистий м’яз</li><li>18 г солі</li><li>3 г цукру</li><li>2 г харчового фосфату</li><li>250–300 г льоду або крижаної води</li><li>2 г чорного перцю</li><li>2 г коріандру</li><li>4–5 г часнику, розтертого в ступці</li><li>свиняча черева для набивки</li></ul><h2>Швартенблок</h2><ul><li>100 г свинячої шкурки без сала</li><li>150 мл води для першого варіння</li><li>50 мл води для другого варіння</li></ul><h2>Як зробити швартенблок</h2><ol><li>Залийте шкурку кип’ятком і варіть 3 години на мінімальному вогні.</li><li>Ще гарячу шкурку пропустіть через м’ясорубку з дрібною решіткою.</li><li>Поверніть масу в каструлю, додайте ще воду і томіть ще 2,5–3 години.</li><li>Пробийте блендером у гладку пасту і повністю охолодіть. Це заготовка, яку зручно зробити заздалегідь.</li></ol><h2>Приготування сарделек</h2><ol><li><strong>Охолодіть сировину.</strong> М’ясо має бути майже крижаним, близько 0°C. Під час усієї роботи температура фаршу не повинна перевищувати 10–12°C.</li><li><strong>Подрібніть м’ясо.</strong> Пропустіть грудинку та пісну свинину через найдрібнішу решітку м’ясорубки.</li><li><strong>Зберіть емульсію.</strong> Додайте сіль, цукор, фосфат і спеції. Партіями пробивайте фарш у блендері або куттері, додаючи лід. В одну з партій покладіть частину швартенблоку. На виході маса має бути гладкою, густою і липкою, як тісто на оладки.</li><li><strong>Об’єднайте фарш.</strong> Перекладіть усі партії в одну миску і ретельно вимішайте до повної однорідності.</li><li><strong>Підготуйте оболонку.</strong> Промийте і замочіть свинячу череву. Наповнюйте її не надто щільно, щоб сардельки залишилися пружними, але не лопнули.</li><li><strong>Сформуйте сардельки.</strong> Перекручуйте їх почергово в різні боки, а повітряні бульбашки проколюйте тонкою голкою.</li></ol><h2>Термообробка у 4 етапи</h2><ol><li><strong>Підсушування і підрум’янення.</strong> Тримайте сардельки при 90–100°C, поки оболонка не стане рум’яною, а температура в центрі не дійде до 55°C.</li><li><strong>Копчення за бажанням.</strong> Якщо є можливість, дайте легкий дим до рівного кольору. У звичайній духовці цей крок можна пропустити.</li><li><strong>Доварювання.</strong> Перекладіть сардельки у воду 80°C або готуйте з парою, доки всередині не буде 69–71°C.</li><li><strong>Крижаний душ.</strong> Одразу охолодіть у воді з льодом, щоб зупинити приготування і зберегти соковитість.</li></ol><h2>Порада</h2><p>Готові сардельки можна зберігати в холодильнику кілька днів або заморозити. Найчастіша помилка тут одна: перегрітий фарш. Якщо температура під час пробивання росте, зупиняйтеся і знову добре охолоджуйте масу.</p>',
+                'image' => 'recipe-sardelky.png',
+                'category' => 'main-dishes',
+                'rating' => '5.0 (1)',
+                'time' => '5 год. + охолодження',
                 'author' => 'Автор сайту',
             ],
         ],
@@ -850,6 +861,62 @@ function vkusno_doma_migrate_parmesan_recipe(): void
     update_option('vkusno_doma_parmesan_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
 }
 add_action('init', 'vkusno_doma_migrate_parmesan_recipe', 34);
+
+function vkusno_doma_migrate_sardelky_recipe(): void
+{
+    if (get_option('vkusno_doma_sardelky_recipe_migrated') === VKUSNO_DOMA_SEED_VERSION) {
+        return;
+    }
+
+    $seed_data = vkusno_doma_get_seed_data();
+    $recipe = null;
+
+    foreach ($seed_data['recipes'] as $recipe_data) {
+        if ($recipe_data['slug'] === 'domashni-sardelky') {
+            $recipe = $recipe_data;
+            break;
+        }
+    }
+
+    if (!$recipe) {
+        return;
+    }
+
+    $existing_recipe = get_page_by_path($recipe['slug'], OBJECT, 'recipe');
+    $post_args = [
+        'post_title' => $recipe['title'],
+        'post_name' => $recipe['slug'],
+        'post_type' => 'recipe',
+        'post_status' => 'publish',
+        'comment_status' => 'open',
+        'ping_status' => 'closed',
+        'post_excerpt' => $recipe['excerpt'],
+        'post_content' => $recipe['content'],
+    ];
+
+    if ($existing_recipe instanceof WP_Post) {
+        $post_args['ID'] = $existing_recipe->ID;
+        $post_id = (int) wp_update_post($post_args);
+    } else {
+        $post_id = (int) wp_insert_post($post_args);
+    }
+
+    if ($post_id) {
+        wp_set_object_terms($post_id, ['main-dishes'], 'recipe_category');
+        update_post_meta($post_id, '_vkusno_doma_rating', $recipe['rating']);
+        update_post_meta($post_id, '_vkusno_doma_time', $recipe['time']);
+        update_post_meta($post_id, '_vkusno_doma_author', $recipe['author']);
+
+        $attachment_id = vkusno_doma_import_local_image($recipe['image'], $post_id);
+
+        if ($attachment_id) {
+            set_post_thumbnail($post_id, $attachment_id);
+        }
+    }
+
+    update_option('vkusno_doma_sardelky_recipe_migrated', VKUSNO_DOMA_SEED_VERSION);
+}
+add_action('init', 'vkusno_doma_migrate_sardelky_recipe', 35);
 
 function vkusno_doma_seed_menus(): void
 {
